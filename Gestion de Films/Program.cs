@@ -17,6 +17,8 @@ namespace Gestion_de_Films
 
         public static void Main(string[] args)
         {
+
+
             //AFFICHER LES DETAILS DE FILMS
             var collection = new CollectionDeFilms();
             collection.ChargerFilmDepuisCSV("title.basics.csv", "title.ratings.csv");
@@ -79,6 +81,66 @@ namespace Gestion_de_Films
                 Console.WriteLine("Utilisateur non trouvé.");
             }
 
+
+            //AJOUTER UN UTILISATEUR - SEUL ADMIN PEUT FAIRE
+            GestionnaireUtilisateur gestionUtilisateur = new GestionnaireUtilisateur();
+            //Authentification de l'administrateur
+
+            Console.WriteLine("Entrez votre email pour vous connecter:");
+            string emailInput_ = Console.ReadLine();
+            Console.WriteLine("Entrez votre mot de passe:");
+            string passwordInput_ = Console.ReadLine();
+
+            // Rechercher l'utilisateur par e-mail
+            Utilisateur utilisateurActuel = utilisateurs.Find(u => u.Email.Equals(emailInput_, StringComparison.OrdinalIgnoreCase));
+
+            if (utilisateurActuel != null && utilisateurActuel.SeConnecter(emailInput_, passwordInput_)) // Vérification de l'authentification
+            {
+                Console.WriteLine($"Connexion réussie pour {utilisateurActuel.Nom} ({utilisateurActuel.Role})");
+
+                //L'utilisateur est connecté, vérifier s'il est administrateur
+                gestionUtilisateur.AjouterUtilisateur(utilisateurs, utilisateurActuel, "Alice", "alice@uqar.ca", "Alice123", "Client");
+
+                // Affichage des utilisateurs après l'ajout
+                Console.WriteLine("\nListe des utilisateurs après ajout :");
+                foreach (var utilisateur in utilisateurs)
+                {
+                    utilisateur.AfficherInfosUtilisateur();
+                }
+            }
+            else
+            {
+                Console.WriteLine("Échec de la connexion. Utilisateur non trouvé ou mot de passe incorrect.");
+            }
+
+
+
+
+
+
+
+
+
+            // MISE À JOUR DES DÉTAILS D'UN UTILISATEUR
+            string emailToUpdate = "theo@uqar.ca"; // Courriel de l'utilisateur à mettre à jour
+            Utilisateur utilisateurToUpdate = utilisateurs.Find(u => u.Email.Equals(emailToUpdate, StringComparison.OrdinalIgnoreCase));
+
+            if (utilisateurToUpdate != null)
+            {
+                Console.WriteLine($"\nMise à jour des informations de l'utilisateur avec l'email: {emailToUpdate}");
+                utilisateurToUpdate.MettreAJourDetails("TheoUpdated", "newtheo@uqar.ca", "NewTheo123");
+            }
+            else
+            {
+                Console.WriteLine($"\nUtilisateur avec l'email {emailToUpdate} non trouvé.");
+            }
+
+            // Afficher la liste des utilisateurs après la mise à jour
+            Console.WriteLine("\nListe des utilisateurs après mise à jour :");
+            foreach (var utilisateur in utilisateurs)
+            {
+                utilisateur.AfficherInfosUtilisateur();
+            }
 
             Console.ReadKey();
             

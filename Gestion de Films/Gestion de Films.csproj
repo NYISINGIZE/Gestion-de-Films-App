@@ -76,6 +76,7 @@
     <Compile Include="CollectionDeFilms.cs" />
     <Compile Include="Film.cs" />
     <Compile Include="FilmDVD.cs" />
+    <Compile Include="GestionnaireUtilisateur.cs" />
     <Compile Include="IGestonDesFilms.cs" />
     <Compile Include="Pret.cs" />
     <Compile Include="Program.cs" />
