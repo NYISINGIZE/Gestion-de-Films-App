@@ -38,7 +38,7 @@ namespace Gestion_de_Films
             // CHANGER NOMBRE DE COPIES PAR TITRE DU FILM
             collection.ModifierNbCopiesFilmParTitre("Le clown et ses chiens", 9); // Update to desired film title and copy number
 
-           //collection.AfficherFilms();
+            //collection.AfficherFilms();
 
             /*************
              
@@ -47,6 +47,8 @@ namespace Gestion_de_Films
 
             // Creation de deux utilisateur; CLIENT et ADMIN
 
+         
+
             List<Utilisateur> utilisateurs = new List<Utilisateur>
             {
                 new Utilisateur("Theo", "theo@uqar.ca", "Theo123", "Admin"),
@@ -54,6 +56,7 @@ namespace Gestion_de_Films
                 new Utilisateur("Bob", "bob@uqar.ca", "Bob123", "Client"),
             };
 
+            GestionnaireUtilisateur gestionUtilisateur = new GestionnaireUtilisateur(utilisateurs);
             // information des utilisateurs
             Console.WriteLine("Informations des utilisateurs au début:");
             foreach (var utilisateur in utilisateurs)
@@ -83,46 +86,32 @@ namespace Gestion_de_Films
 
 
             //AJOUTER UN UTILISATEUR - SEUL ADMIN PEUT FAIRE
-            GestionnaireUtilisateur gestionUtilisateur = new GestionnaireUtilisateur();
-            //Authentification de l'administrateur
 
+            //Authentification de l'administrateur
             Console.WriteLine("Entrez votre email pour vous connecter:");
             string emailInput_ = Console.ReadLine();
             Console.WriteLine("Entrez votre mot de passe:");
             string passwordInput_ = Console.ReadLine();
 
-            // Rechercher l'utilisateur par e-mail
-            Utilisateur utilisateurActuel = utilisateurs.Find(u => u.Email.Equals(emailInput_, StringComparison.OrdinalIgnoreCase));
-
-            if (utilisateurActuel != null && utilisateurActuel.SeConnecter(emailInput_, passwordInput_)) // Vérification de l'authentification
+            if (gestionUtilisateur.SeConnecter(emailInput_, passwordInput_, out Utilisateur utilisateurActuel))
             {
                 Console.WriteLine($"Connexion réussie pour {utilisateurActuel.Nom} ({utilisateurActuel.Role})");
 
-                //L'utilisateur est connecté, vérifier s'il est administrateur
-                gestionUtilisateur.AjouterUtilisateur(utilisateurs, utilisateurActuel, "Alice", "alice@uqar.ca", "Alice123", "Client");
+                // Ajout d'un nouvel utilisateur
+                gestionUtilisateur.AjouterUtilisateur(utilisateurActuel, "Alice", "alice@uqar.ca", "Alice123", "Client");
 
-                // Affichage des utilisateurs après l'ajout
+                // Afficher la liste des utilisateurs après ajout
                 Console.WriteLine("\nListe des utilisateurs après ajout :");
-                foreach (var utilisateur in utilisateurs)
-                {
-                    utilisateur.AfficherInfosUtilisateur();
-                }
+                gestionUtilisateur.AfficherUtilisateurs();
             }
             else
             {
                 Console.WriteLine("Échec de la connexion. Utilisateur non trouvé ou mot de passe incorrect.");
+
             }
 
-
-
-
-
-
-
-
-
             // MISE À JOUR DES DÉTAILS D'UN UTILISATEUR
-            string emailToUpdate = "theo@uqar.ca"; // Courriel de l'utilisateur à mettre à jour
+                string emailToUpdate = "theo@uqar.ca"; // Courriel de l'utilisateur à mettre à jour
             Utilisateur utilisateurToUpdate = utilisateurs.Find(u => u.Email.Equals(emailToUpdate, StringComparison.OrdinalIgnoreCase));
 
             if (utilisateurToUpdate != null)
