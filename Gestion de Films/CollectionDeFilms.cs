@@ -1,13 +1,10 @@
 ﻿using CsvHelper;
 using System.Globalization;
 using System.Collections.Generic;
-
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Resources;
 using System;
+
 
 namespace Gestion_de_Films
 {
@@ -15,6 +12,11 @@ namespace Gestion_de_Films
    public  class CollectionDeFilms : IGestonDesFilms
     {
         public List<FilmDVD> Films { get; private set; } = new List<FilmDVD>();
+        public CollectionDeFilms() { }
+        public CollectionDeFilms(List<FilmDVD> films)
+        {
+            Films = films;
+        }
 
         public void AjouterFilm(FilmDVD film)
         {
@@ -22,6 +24,7 @@ namespace Gestion_de_Films
         }
 
 
+        //SupprimerFilm
 
         public void SupprimerFilm(FilmDVD film)
         {
@@ -37,20 +40,22 @@ namespace Gestion_de_Films
         }
 
 
-        // Methode pour modifier le nombre de copie par titre
-
-        public void ModifierNbCopiesFilmParTitre(string titre, int newNbCopies)
+        //RechercherParTitre
+        public List<FilmDVD> RechercherParTitre(string titre)
         {
-            var film = Films.Find(f => f.Titre.Equals(titre, StringComparison.OrdinalIgnoreCase));
-            if (film != null)
-            {
-                film.ModifierNbCopies(newNbCopies);
-                Console.WriteLine($"Le nombre de copies pour '{titre}' a été mis à jour à {newNbCopies}.");
-            }
-            else
-            {
-                Console.WriteLine($"Film '{titre}' non trouvé dans la collection.");
-            }
+            return Films.Where(f => f.Titre.IndexOf(titre, StringComparison.OrdinalIgnoreCase) >= 0).ToList();
+        }
+
+        //RechercherParGenre
+        public List<FilmDVD> RechercherParGenre(string genre)
+        {
+            return Films.Where(f => f.Genre.IndexOf(genre, StringComparison.OrdinalIgnoreCase) >= 0).ToList();
+        }
+
+        // RechercherParRealisateur
+        public List<FilmDVD> RechercherParRealisateur(string realisateur)
+        {
+            return Films.Where(f => f.Realisateur.IndexOf(realisateur, StringComparison.OrdinalIgnoreCase) >= 0).ToList();
         }
 
         //Supprimer Film par Titre
@@ -69,7 +74,40 @@ namespace Gestion_de_Films
             }
         }
 
+        // METHODE POUR AfficherDetailsRentedFilms
+        public void AfficherDetailsRentedFilms()
+        {
+            Console.WriteLine("\nDétails des films loués et copies restantes:");
 
+            foreach (var film in Films)
+            {
+                int initialCopies = 10; // Assume initial number of copies is 10
+                int rentedCopies = initialCopies - film.NbCopiesDisponibles;
+
+                // Show only films that have been rented at least once
+                if (rentedCopies > 0)
+                {
+                    Console.WriteLine($"Titre: {film.Titre}, Copies restantes: {film.NbCopiesDisponibles}, Copies louées: {rentedCopies}");
+                }
+            }
+        }
+
+        // Methode pour modifier le nombre de copie par titre
+        public void ModifierNbCopiesFilmParTitre(string titre, int newNbCopies)
+        {
+            var film = Films.Find(f => f.Titre.Equals(titre, StringComparison.OrdinalIgnoreCase));
+            if (film != null)
+            {
+                film.ModifierNbCopies(newNbCopies);
+                Console.WriteLine($"Le nombre de copies pour '{titre}' a été mis à jour à {newNbCopies}.");
+            }
+            else
+            {
+                Console.WriteLine($"Film '{titre}' non trouvé dans la collection.");
+            }
+        }
+
+        // Methode pour Afficher Films
         public void AfficherFilms()
         {
             foreach (var film in Films)
@@ -78,68 +116,7 @@ namespace Gestion_de_Films
             }
         }
 
-
-        // Implementation d'une methode pour charger les films a partir de CSV file
-
-        /*
-        public void ChargerFilmDepuisCSV(string titleBasicPath, string titleRatingPath)
-        {
-            // une dictionnaire pour stocker les donnes IDMb par film
-            var ratingsDict = new Dictionary<string, double>();
-
-            //Charger les donnees ratings
-
-            using (var reader = new StreamReader(titleBasicPath))
-            using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
-            {
-                csv.Read();
-                csv.ReadHeader();
-                while (csv.Read())
-                {
-                    var id = csv.GetField("tconst");
-                    var title = csv.GetField("primaryTitle");
-                    var director = csv.GetField("primaryTitle");
-                    var genre = csv.GetField("genres");
-                    var yearString = csv.GetField("startYear")?.Trim();
-                    //var yearString = csv.GetField("startYear");
-                    int.TryParse(yearString, out int parsedYear);
-
-                    //Verifier si une note est disponible
-                    ratingsDict.TryGetValue(id, out double rating);
-
-                    //Creation d'une instance FilmDVD
-                    
-                    /*var film = new FilmDVD()
-                    {
-
-                        Titre = title,
-                        Realisateur = director,
-                        Genre = genre,
-                        AnneeSortie = year,
-                        NoteIMDb = rating,
-                        NbCopiesDisponibles = 10, //nombre par defaut 
-                        PrixLocation = 3.55m // prix pour la location
-                       
-
-                    };
-                    */
-        /*
-
-                   var film = new FilmDVD(
-                        title,          // Titre
-                        director,       // Realisateur
-                        genre,          // Genre
-                        //int.TryParse(year, out int parsedYear) ? parsedYear : 0, // AnneeSortie with error handling
-                                                             //int.Parse(year), // AnneeSortie
-                        parsedYear,
-                        rating,         // NoteIMDb
-                        10,             // NbCopiesDisponibles (default value)
-                        3.55m          // PrixLocation (default rental price)
-                    );
-
-                    AjouterFilm(film);
-
-        */
+        // Method to search films by title
 
         public void ChargerFilmDepuisCSV(string titleBasicPath, string titleRatingPath)
         {
@@ -195,13 +172,8 @@ namespace Gestion_de_Films
 
                     AjouterFilm(film);
 
-
-
                 }
-
-
             }
         }
     }
-
 }

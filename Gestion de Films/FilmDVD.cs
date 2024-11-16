@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Gestion_de_Films
 {
@@ -10,7 +6,8 @@ namespace Gestion_de_Films
     {
         public int NbCopiesDisponibles { get; set; }
         public decimal PrixLocation { get; set; }
-
+        public DateTime? DateRetour {  get; set; }
+   
 
         //Afficher les Details des films
         public override void AfficherDetails()
@@ -24,7 +21,6 @@ namespace Gestion_de_Films
             Console.WriteLine($"Rental Price: {PrixLocation:C}");
             Console.WriteLine("------------------");
         }
-
 
         //Modifier le nombre de copies disponible
 
@@ -47,17 +43,5 @@ namespace Gestion_de_Films
                 Console.WriteLine("Le nombre de copies ne peut pas être négatif.");
             }
         }
-
-
-
-
-        /*
-        public void ModifierNbCopies(int newCount)
-        {
-            NbCopiesDisponibles = newCount;
-        }
-        */
-
-
     }
 }

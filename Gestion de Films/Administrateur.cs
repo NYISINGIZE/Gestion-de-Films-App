@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Gestion_de_Films
 {
@@ -27,7 +26,18 @@ namespace Gestion_de_Films
         {
             film.ModifierNbCopies(nbCopies);
         }
-       
+
+        public void AfficherFilmsEmpruntesParClients(List<Utilisateur> utilisateurs)
+        {
+            Console.WriteLine("\nFilms empruntés par chaque client:");
+
+            foreach (var utilisateur in utilisateurs.OfType<Client>()) // Filter only clients
+            {
+                Console.WriteLine($"\nClient: {utilisateur.Nom}");
+                utilisateur.AfficherFilmsEmpruntes(); // Use Client's method
+            }
+        }
+
     }
 
 }

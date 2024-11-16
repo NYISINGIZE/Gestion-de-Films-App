@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Gestion_de_Films
 {
@@ -30,9 +29,18 @@ namespace Gestion_de_Films
 
         public void AfficherFilmsEmpruntes()
         {
-            foreach (var film in FilmsEmpruntes)
+            if (FilmsEmpruntes.Any())
             {
-                film.AfficherDetails();
+                Console.WriteLine("\nFilms empruntés:");
+                foreach (var film in FilmsEmpruntes)
+                {
+                    film.AfficherDetails();
+                    Console.WriteLine($"Date de retour: {(film.DateRetour?.ToShortDateString() ?? "Non spécifiée")}");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Aucun film emprunté.");
             }
         }
     }
