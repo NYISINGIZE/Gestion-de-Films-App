@@ -1,4 +1,16 @@
-﻿using System;
+﻿
+
+
+
+
+
+
+
+
+
+
+
+using System;
 using System.Collections.Generic;
 
 
@@ -42,6 +54,8 @@ namespace Gestion_de_Films
                 utilisateur.AfficherInfosUtilisateur();
             }
         }
+
+
     }
 }
 

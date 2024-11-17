@@ -13,7 +13,7 @@ namespace Gestion_de_Films
       : base(nom, email, motDePasse, "Client") // Definir "Client"
         {
         }
-        void LouerFilm(FilmDVD film)
+        public void LouerFilm(FilmDVD film)
         {
             if (film.NbCopiesDisponibles > 0)
             {

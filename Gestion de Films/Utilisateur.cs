@@ -40,6 +40,9 @@ namespace Gestion_de_Films
         }
 
         //Methode pour la mise ajour des details des utilisateurs
+
+
+
         public void MettreAJourDetails(string nom, string email, string motDePasse)
         {
             Nom = nom;
